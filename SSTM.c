@@ -3,7 +3,7 @@
 
 int main()
 {
-    int n, i, j, head, item[20], dst[20];
+    int n, i, min, j, head, item[20], dst[20];
     int cylinders=0;
     printf("Enter no. of locations:");
     scanf("%d",&n);
@@ -13,35 +13,44 @@ int main()
     for(i=0;i<n;i++)
     {
         scanf("%d",&item[i]);
-        dst[i]=abs(head-item[i]);
-    }
-    //Selection Sort
-    for(i=0;i<n-1;i++)
-    {
-        for(j=i+1;j<n;j++)
-        {
-            if(dst[j]>dst[i])
-            {
-                int temp=dst[j];
-                dst[j]=dst[i];
-                dst[i]=temp;
-
-                temp=item[i];
-                item[i]=item[j];
-                item[j]=temp;
-            }
-        }
     }
 
+    int count = n;
 
     printf("\n\nOrder of disk allocation is as follows:\n");
-    for(i=0;i<n;i++)
+    while(count>0)
     {
-        printf(" -> %d", item[i]);
-        cylinders+= abs(head-item[i]);
-        head=item[i];
+        printf("\nDistance array:");
+        for(i=0;i<n;i++)
+        {
+            if(item[i]==-1)
+                continue;
+            dst[i]=abs(head-item[i]);
+            printf("%d ",dst[i]);
+        }
+        //Selection Sort to sort processes according to the distanes from the current head
+        for(i=0;i<n;i++)
+        {
+            if(item[i]!= -1)
+            {
+                min=i;
+                break;
+            }
+        }
+        for(i=1;i<n;i++)
+        {
+            if(item[i]== -1)
+                continue;
+            if(dst[min]>dst[i])
+                min=i;
+        }
+        printf("  min: %d ",min);
+        cylinders+=dst[min];
+        printf(" -> %d", item[min]);
+        head=item[min];
+        item[min]=-1;
+        count--;
     }
-
     printf("\n\nCylinder movement: %d\n\n", cylinders );
 
 
